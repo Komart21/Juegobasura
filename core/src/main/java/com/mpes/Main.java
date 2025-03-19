@@ -59,6 +59,8 @@ public class Main implements ApplicationListener {
         dropRectangle = new Rectangle();
         dropCount = 0; // Inicializa el contador
         font = new BitmapFont(); // Carga una fuente por defecto
+        font.setUseIntegerPositions(false);
+        font.getData().setScale(viewport.getWorldHeight() / Gdx.graphics.getHeight());
         music.setLooping(true);
         music.setVolume(.5f);
         music.play();
@@ -158,6 +160,10 @@ public class Main implements ApplicationListener {
         float worldWidth = viewport.getWorldWidth();
         float worldHeight = viewport.getWorldHeight();
 
+        // Establecer el tamaño de la fuente
+        font.setColor(Color.WHITE);
+        font.getData().setScale(0.05f);  // Ajuste el tamaño de la fuente para que sea más grande
+
         // Dibujar fondo y elementos solo si no está en Game Over
         if (!gameOver) {
             // 1. Dibujar el fondo del juego primero
@@ -171,14 +177,15 @@ public class Main implements ApplicationListener {
                 dropSprite.draw(spriteBatch);
             }
 
+            // Mostrar el contador de gotas en la pantalla durante el juego en la parte superior izquierda
+            font.draw(spriteBatch, "Count: " + dropCount, 0f, worldHeight - 0.2f);  // Mostrar el contador de gotas en la parte superior izquierda
+
         } else {
             // 1. Dibujar el fondo de Game Over primero
             spriteBatch.draw(gameOverBackgroundTexture, 0, 0, worldWidth, worldHeight);
 
-            // 2. Dibujar solo el dropCount en la parte superior derecha de la pantalla de Game Over
-            font.setColor(Color.WHITE);
-            font.getData().setScale(0.1f); // Ajusta el tamaño del texto
-            font.draw(spriteBatch, "" + dropCount, worldWidth - 1.8f, worldHeight - 0.3f);  // Mostrar solo el número en la parte superior derecha
+            // 2. Dibujar la puntuación final en la pantalla de Game Over
+            font.draw(spriteBatch, "Score: " + dropCount, 0f, worldHeight - 0.2f);  // Mostrar la puntuación en la parte superior izquierda
 
             // 3. Dibujar el botón de reinicio (con la imagen) más abajo en la pantalla
             float resetButtonWidth = 1.5f;
@@ -192,6 +199,8 @@ public class Main implements ApplicationListener {
 
         spriteBatch.end();  // Finalizar el dibujo
     }
+
+
 
     private void createDroplet() {
         float dropWidth = 1;
